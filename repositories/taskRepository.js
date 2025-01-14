@@ -8,7 +8,12 @@ const createANewTaskInDB = (taskData) => {
     return taskModel.create(taskData)
 }
 
+const getAllTasksFromDB = () => {
+    return taskModel.find()
+}
+
 module.exports = {
     findTaskByTitleInDB,
-    createANewTaskInDB
+    createANewTaskInDB,
+    getAllTasksFromDB
 }

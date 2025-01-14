@@ -1,4 +1,4 @@
-const { findTaskByTitleInDB, createANewTaskInDB } = require("../repositories/taskRepository")
+const { findTaskByTitleInDB, createANewTaskInDB, getAllTasksFromDB } = require("../repositories/taskRepository")
 const { setResponseBody } = require("../utils/responseFormatter")
 
 const createTask = async (request, response) => {
@@ -18,6 +18,19 @@ const createTask = async (request, response) => {
     }
 }
 
+const getAllTasks = async (request, response) => {
+    
+    try{
+        const tasks = await getAllTasksFromDB()
+
+        response.status(200).send(setResponseBody("All tasks fetched", null, tasks))
+    }
+    catch(error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
-    createTask
+    createTask,
+    getAllTasks
 }
