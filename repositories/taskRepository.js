@@ -16,9 +16,14 @@ const getTaskByIdFromDB = (id) => {
     return taskModel.findOne({ _id: id })
 }
 
+const editTaskInDB = (id, taskData) => {
+    return taskModel.findByIdAndUpdate(id, taskData, { new: true })
+}
+
 module.exports = {
     findTaskByTitleInDB,
     createANewTaskInDB,
     getAllTasksFromDB,
-    getTaskByIdFromDB
+    getTaskByIdFromDB,
+    editTaskInDB
 }
