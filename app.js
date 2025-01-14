@@ -2,11 +2,22 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 
+const cors = require('cors')
+
 const connect = require('./database/connection')
+
+const taskRoute = require('./routes/taskRoute')
+
+
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
 app.get('/', (request, response) => {
     response.status(200).send({ message: "Server running successfully"})
 })
+
+app.use('/api/v1/tasks', taskRoute)
 
 connect() 
     .then( () => {
