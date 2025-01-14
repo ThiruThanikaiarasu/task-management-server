@@ -3,7 +3,7 @@ const router = express.Router()
 
 const validateRequest = require('../middleware/validateRequest')
 const { createTaskSchema, editTaskSchema } = require('../validators/taskValidator')
-const { createTask, getAllTasks, getTaskById, editTask } = require('../controller/taskController')
+const { createTask, getAllTasks, getTaskById, editTask, deleteTask } = require('../controller/taskController')
 
 
 router.post(
@@ -32,6 +32,12 @@ router.patch(
     validateRequest(editTaskSchema),
 
     editTask
+)
+
+router.delete(
+    '/:id',
+
+    deleteTask
 )
 
 module.exports = router

@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose")
-const { findTaskByTitleInDB, createANewTaskInDB, getAllTasksFromDB, getTaskByIdFromDB, editTaskInDB } = require("../repositories/taskRepository")
+const { findTaskByTitleInDB, createANewTaskInDB, getAllTasksFromDB, getTaskByIdFromDB, editTaskInDB, deleteTaskInDB } = require("../repositories/taskRepository")
 const { setResponseBody } = require("../utils/responseFormatter")
+const { response } = require("express")
 
 const createTask = async (request, response) => {
     const taskData = request.body
@@ -71,9 +72,31 @@ const editTask = async (request, response) => {
     }
 }
 
+const deleteTask = async (request, response) => {
+    const { id } = request.params
+
+    try {
+        if (!mongoose.isValidObjectId(id)) {
+            return response.status(400).send(setResponseBody("Invalid task ID", "invalid_request", null))
+        }
+
+        const deletedTask = await deleteTaskInDB(id)
+
+        if (!deletedTask) {
+            return response.status(404).send(setResponseBody("Task not found or already deleted", "not_found", null))
+        }
+
+        response.status(200).send(setResponseBody("Task deleted successfully", null, null))
+    }
+    catch(error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
     createTask,
     getAllTasks,
     getTaskById,
-    editTask
+    editTask,
+    deleteTask
 }
