@@ -3,7 +3,7 @@ const router = express.Router()
 
 const validateRequest = require('../middleware/validateRequest')
 const { createTaskSchema } = require('../validators/taskValidator')
-const { createTask, getAllTasks } = require('../controller/taskController')
+const { createTask, getAllTasks, getTaskById } = require('../controller/taskController')
 
 
 router.post(
@@ -17,9 +17,13 @@ router.post(
 router.get(
     '/',
 
-    
-
     getAllTasks
+)
+
+router.get(
+    '/:id',
+
+    getTaskById
 )
 
 module.exports = router

@@ -1,4 +1,5 @@
-const { findTaskByTitleInDB, createANewTaskInDB, getAllTasksFromDB } = require("../repositories/taskRepository")
+const { default: mongoose } = require("mongoose")
+const { findTaskByTitleInDB, createANewTaskInDB, getAllTasksFromDB, getTaskByIdFromDB } = require("../repositories/taskRepository")
 const { setResponseBody } = require("../utils/responseFormatter")
 
 const createTask = async (request, response) => {
@@ -30,7 +31,27 @@ const getAllTasks = async (request, response) => {
     }
 }
 
+const getTaskById = async (request, response) => {
+    const { id } = request.params 
+    try{
+        if (!mongoose.isValidObjectId(id)) {
+            return response.status(400).send(setResponseBody("Invalid task ID", "invalid_request", null))
+        }
+
+        const task = await getTaskByIdFromDB(id)
+        if(!task) {
+            return response.status(404).send(setResponseBody("Task not found", "not_found", null))
+        }
+
+        response.status(200).send(setResponseBody("Task fetched", null, task))
+    }
+    catch(error) {
+        response.status(500).send(setResponseBody(error.message, 'server_error', null))
+    }
+}
+
 module.exports = {
     createTask,
-    getAllTasks
+    getAllTasks,
+    getTaskById
 }
